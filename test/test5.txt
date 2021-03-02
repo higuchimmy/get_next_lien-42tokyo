@@ -1,0 +1,27 @@
+111111111111111111111111111111111111111111
+https://github.com/Tripouille/gnlTester.git
+
+
+#include <stdio.h>
+
+int main()
+{
+int     fd1;
+int     fd2;
+int     fd3;
+char    **line = NULL;
+
+line = (char**)malloc(sizeof(char*));
+fd1 = open("test1.txt", O_RDONLY);
+fd2 = open("test2.txt", O_RDONLY);
+fd3 = open("test3.txt", O_RDONLY);
+for (int i = 0; i < 3; i++)
+{
+if(-1 != get_next_line(fd1, line))
+printf("%s\n", *line);
+if(-1 != get_next_line(fd2, line))
+printf("%s\n", *line);
+if(-1 != get_next_line(fd3, line))
+printf("%s\n", *line);
+}
+}
