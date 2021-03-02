@@ -6,12 +6,12 @@
 /*   By: thiguchi <thiguchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 11:38:03 by thiguchi          #+#    #+#             */
-/*   Updated: 2021/03/02 11:38:04 by thiguchi         ###   ########.fr       */
+/*   Updated: 2021/03/02 22:53:33 by thiguchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+#include <stdio.h>
 static void		ft_allfree(char *s1, char *s2)
 {
 	free(s1);
@@ -70,7 +70,7 @@ static int		ft_linejoin(int fd, char **line, char **save, char *buf)
 		return (-1);
 	if (ft_strchr(*line, '\n') != NULL)
 		return (1);
-	while ((size = read(fd, buf, BUFFER_SIZE)) > 0)
+	while ((size = read(fd, buf, (size_t)BUFFER_SIZE)) > 0)
 	{
 		buf[size] = '\0';
 		tmp = ft_strjoin(*line, buf);
@@ -81,7 +81,7 @@ static int		ft_linejoin(int fd, char **line, char **save, char *buf)
 		if (ft_strchr(*line, '\n') != NULL)
 			return (1);
 	}
-	if (read(fd, buf, BUFFER_SIZE) < 0)
+	if (read(fd, buf, (size_t)BUFFER_SIZE) < 0)
 		return (-1);
 	return (0);
 }
@@ -93,9 +93,11 @@ int				get_next_line(int fd, char **line)
 	int			flag;
 
 	flag = 0;
-	if (fd < 0 || fd >= FOPEN_MAX || line == NULL || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= FOPEN_MAX || line == NULL || (size_t)BUFFER_SIZE <= 0)
+		printf("%d",5);
 		return (-1);
-	if (!(buf = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+	if (!(buf = malloc(sizeof(char) * ((size_t)BUFFER_SIZE + 1))))
+		printf("%d",5);
 		return (-1);
 	if (!save)
 	{
