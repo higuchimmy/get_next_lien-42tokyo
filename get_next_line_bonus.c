@@ -6,11 +6,17 @@
 /*   By: thiguchi <thiguchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 14:38:10 by thiguchi          #+#    #+#             */
-/*   Updated: 2021/03/02 11:17:20 by thiguchi         ###   ########.fr       */
+/*   Updated: 2021/03/02 11:39:47 by thiguchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+static void		ft_allfree(char *s1, char *s2)
+{
+	free(s1);
+	free(s2);
+}
 
 static char		*ft_strjoin(char const *s1, char const *s2)
 {
@@ -101,11 +107,9 @@ int				get_next_line(int fd, char **line)
 	}
 	if ((flag = ft_linejoin(fd, line, &save, buf)) < 0)
 	{
-		free(buf);
-		free(save);
+		ft_allfree(buf, save);
 		return (-1);
 	}
-	free(buf);
-	free(save);
+	ft_allfree(buf, save);
 	return (ft_find_newline(line, &save));
 }
