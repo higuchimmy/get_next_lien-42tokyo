@@ -6,7 +6,7 @@
 /*   By: thiguchi <thiguchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 14:38:10 by thiguchi          #+#    #+#             */
-/*   Updated: 2021/03/01 10:43:50 by thiguchi         ###   ########.fr       */
+/*   Updated: 2021/03/02 11:17:20 by thiguchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,13 @@ static int		ft_linejoin(int fd, char **line, char **save, char *buf)
 		tmp = ft_strjoin(*line, buf);
 		free(*line);
 		*line = tmp;
+		if (*line == NULL)
+			return (-1);
 		if (ft_strchr(*line, '\n') != NULL)
 			return (1);
 	}
+	if (read(fd, buf, BUFFER_SIZE) < 0)
+		return (-1);
 	return (0);
 }
 
@@ -80,7 +84,9 @@ int				get_next_line(int fd, char **line)
 {
 	char		*buf;
 	static char	*save;
+	int			flag;
 
+	flag = 0;
 	if (fd < 0 || fd >= FOPEN_MAX || line == NULL || BUFFER_SIZE <= 0)
 		return (-1);
 	if (!(buf = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
@@ -93,7 +99,12 @@ int				get_next_line(int fd, char **line)
 			return (-1);
 		}
 	}
-	ft_linejoin(fd, line, &save, buf);
+	if ((flag = ft_linejoin(fd, line, &save, buf)) < 0)
+	{
+		free(buf);
+		free(save);
+		return (-1);
+	}
 	free(buf);
 	free(save);
 	return (ft_find_newline(line, &save));
